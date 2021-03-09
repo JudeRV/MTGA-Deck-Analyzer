@@ -19,7 +19,7 @@ namespace WinForms_Test
         static readonly HttpClient client = new HttpClient();
         Card[] cards = { };
         string[] lines = { };
-        int cardAmount = 60;
+        int libraryCount = 60;
         public Form1()
         {
             InitializeComponent();
@@ -78,6 +78,8 @@ namespace WinForms_Test
             }
             await DisplayCards();
             lblDeckText.Visible = false;
+            cardTypeListBox.Visible = true;
+            cardTypeTextBox.Visible = true;
         }
 
         //Reads deck file and converts it to list of card objects
@@ -132,7 +134,7 @@ namespace WinForms_Test
                 string json = await client.GetStringAsync($"https://api.scryfall.com/cards/named?fuzzy={cardName}");
                 cardList[i] = JsonConvert.DeserializeObject<Card>(json);
                 cardList[i].amount = cardAmount;
-                cardList[i].percent = Math.Round((decimal)((cardList[i].amount / cardAmount) * 100), 2);
+                cardList[i].percent = Math.Round((decimal)(cardList[i].amount / (decimal)libraryCount * 100m), 2);
                 Thread.Sleep(100);
             }
             return cardList;
@@ -141,7 +143,7 @@ namespace WinForms_Test
         //Displays pictures of cards in pictureBox group
         private Task DisplayCards()
         {
-            foreach (var pictureBox in groupBox1.Controls.OfType<PictureBox>())
+            foreach (PictureBox pictureBox in groupBox1.Controls.OfType<PictureBox>())
             {
                 try
                 {
@@ -154,6 +156,19 @@ namespace WinForms_Test
                     {
                         pictureBox.Load(cards[index].image_uris.large);
                     }
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    continue;
+                }
+            }
+            foreach (Label label in groupBox1.Controls.OfType<Label>())
+            {
+                try
+                {
+                    int index = int.Parse(label.Tag.ToString());
+                    label.Text = $"{cards[index].name} - {cards[index].amount}\n{cards[index].percent}%";
+                    label.Visible = true;
                 }
                 catch (IndexOutOfRangeException)
                 {
@@ -189,6 +204,25 @@ namespace WinForms_Test
             else
             {
                 fileTextBox.ForeColor = Color.Black;
+            }
+        }
+
+        private void cardTypeListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            decimal totalPercent = 0m;
+            cardTypeTextBox.Text = string.Empty;
+            IEnumerable<Card> query =
+                from card in cards
+                where card.type_line.Contains($"{cardTypeListBox.Text}")
+                select card;
+            foreach (Card card in query)
+            {
+                totalPercent += card.percent;
+            }
+            cardTypeTextBox.Text += totalPercent + "% chance of drawing\r\n";
+            foreach (Card card in query)
+            {
+                cardTypeTextBox.Text += card.name + "\r\n";
             }
         }
     }

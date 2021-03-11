@@ -19,10 +19,12 @@ namespace WinForms_Test
         static readonly HttpClient client = new HttpClient();
         Card[] cards = { };
         string[] lines = { };
+        string[] cardKeywords = { };
         int libraryCount = 60;
         public Form1()
         {
             InitializeComponent();
+            this.MaximizeBox = false;
         }
 
         //Just opens up file window to select deck file
@@ -40,30 +42,30 @@ namespace WinForms_Test
         //Loads deck file from file-path
         private async void btnLoadDeck_Click(object sender, EventArgs e)
         {
-            lblDeckText.Visible = true;
-            lblDeckText.Text = "Just a moment . . .";
+            lblStatus.Visible = true;
+            lblStatus.Text = "Just a moment . . .";
             try
             {
                 lines = File.ReadAllLines(fileTextBox.Text);
                 if (Path.GetExtension(fileTextBox.Text) != ".txt")
                 {
-                    lblDeckText.Text = "Invalid file type. Try again.";
+                    lblStatus.Text = "Invalid file type. Try again.";
                     return;
                 }
                 else if (lines.Length < 2)
                 {
-                    lblDeckText.Text = "Invalid file. Try again.";
+                    lblStatus.Text = "Invalid file. Try again.";
                     return;
                 }
             }
             catch (ArgumentException)
             {
-                lblDeckText.Text = "File not found. Try again.";
+                lblStatus.Text = "File not found. Try again.";
                 return;
             }
             catch (FileNotFoundException)
             {
-                lblDeckText.Text = "File not found. Try again.";
+                lblStatus.Text = "File not found. Try again.";
                 return;
             }
 
@@ -73,13 +75,13 @@ namespace WinForms_Test
             }
             catch (IndexOutOfRangeException)
             {
-                lblDeckText.Text = "Invalid file. Try again.";
+                lblStatus.Text = "Invalid file. Try again.";
                 return;
             }
             await DisplayCards();
-            lblDeckText.Visible = false;
-            cardTypeListBox.Visible = true;
-            cardTypeTextBox.Visible = true;
+            lblStatus.Visible = false;
+            lblSort.Visible = true;
+            sortTypeListBox.Visible = true;
         }
 
         //Reads deck file and converts it to list of card objects
@@ -143,7 +145,7 @@ namespace WinForms_Test
         //Displays pictures of cards in pictureBox group
         private Task DisplayCards()
         {
-            foreach (PictureBox pictureBox in groupBox1.Controls.OfType<PictureBox>())
+            foreach (PictureBox pictureBox in cardImagesGroupBox.Controls.OfType<PictureBox>())
             {
                 try
                 {
@@ -162,7 +164,7 @@ namespace WinForms_Test
                     continue;
                 }
             }
-            foreach (Label label in groupBox1.Controls.OfType<Label>())
+            foreach (Label label in cardImagesGroupBox.Controls.OfType<Label>())
             {
                 try
                 {
@@ -175,6 +177,7 @@ namespace WinForms_Test
                     continue;
                 }
             }
+            cardImagesGroupBox.Visible = true;
             return Task.CompletedTask;
         }
 
@@ -207,26 +210,195 @@ namespace WinForms_Test
             }
         }
 
-        private void cardTypeListBox_SelectedIndexChanged(object sender, EventArgs e)
+        //Displays cards & percent chance of drawing any card type
+        private void sortListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            IEnumerable<Card> query = Enumerable.Empty<Card>();
             decimal totalPercent = 0m;
-            cardTypeTextBox.Text = string.Empty;
-            IEnumerable<Card> query =
-                from card in cards
-                where card.type_line.Contains($"{cardTypeListBox.Text}")
-                select card;
+            sortTextBox.Text = string.Empty;
+            switch (sortListBox.Tag)
+            {
+                case "Card Type":
+                    query = 
+                        from card in cards
+                        where card.type_line.Contains($"{sortListBox.Text}")
+                        select card;
+                    break;
+                case "Rarity":
+                    query =
+                        from card in cards
+                        where card.rarity.Equals($"{sortListBox.Text}")
+                        select card;
+                    break;
+            }
+
             foreach (Card card in query)
             {
                 totalPercent += card.percent;
             }
-            cardTypeTextBox.Text += totalPercent + "% chance of drawing\r\n";
+            sortTextBox.Text += totalPercent + "% chance of drawing\r\n";
             foreach (Card card in query)
             {
-                cardTypeTextBox.Text += card.name + "\r\n";
+                sortTextBox.Text += card.name + "\r\n";
+            }
+        }
+
+        //Tells sortListBox what to do basically
+        private void sortTypeListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            sortListBox.Tag = sortTypeListBox.Text;
+            sortListBox.Visible = true;
+            sortTextBox.Visible = true;
+            sortListBox.Items.Clear();
+            keywordTextBox.Visible = false;
+            lblFilter.Visible = true;
+            wCheckBox.Visible = false;
+            uCheckBox.Visible = false;
+            bCheckBox.Visible = false;
+            rCheckBox.Visible = false;
+            gCheckBox.Visible = false;
+
+            switch (sortTypeListBox.Text)
+            {
+                case "Card Type":
+                    string[] cardTypes = { "Land", "Instant", "Sorcery", "Creature", "Artifact", "Enchantment", "Planeswalker" };
+                    foreach (string str in cardTypes)
+                    {
+                        sortListBox.Items.Add(str);
+                    }
+                    break;
+                case "Keywords":
+                    sortListBox.Visible = false;
+                    keywordTextBox.Visible = true;
+                    break;
+                case "Custom Keywords":
+                    //TODO: Implement this
+                    break;
+                case "Rarity":
+                    string[] rarities = { "common", "uncommon", "rare", "mythic" };
+                    foreach (string str in rarities)
+                    {
+                        sortListBox.Items.Add(str);
+                    }
+                    break;
+                case "Color":
+                    wCheckBox.Visible = true;
+                    uCheckBox.Visible = true;
+                    bCheckBox.Visible = true;
+                    rCheckBox.Visible = true;
+                    gCheckBox.Visible = true;
+                    break;
+            }
+        }
+        private void keywordTextBox_TextChanged(object sender, EventArgs e)
+        {
+            sortTextBox.Text = string.Empty;
+            decimal totalPercent = 0m;
+            string[] keywordsInput = keywordTextBox.Lines;
+            string[] keywords = new string[keywordsInput.Length];
+            for (int i = 0; i < keywords.Length; i++)
+            {
+                keywords[i] = UppercaseFirst(keywordsInput[i].ToLower());
+            }
+            List<string> selectedCards = new List<string>();
+            foreach (Card card in cards)
+            {
+                if (card.keywords.Any(x => keywords.Contains(x)))
+                {
+                    selectedCards.Add(card.name);
+                    totalPercent += card.percent;
+                }
+            }
+
+            sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+            foreach (string str in selectedCards)
+            {
+                sortTextBox.Text += str + "\r\n";
+            }
+        }
+
+        //For debug purposes, will remove for production
+        private void debugTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        //These two just let you drop a file into fileTextBox
+        private void fileTextBox_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            foreach (string str in fileList)
+            {
+                fileTextBox.Text = str;
+            }
+        }
+        private void fileTextBox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        //Literally just makes first letter of a string capital
+        private string UppercaseFirst(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
+
+        private void UpdateCheckBoxes(object sender, EventArgs e)
+        {
+            sortTextBox.Text = string.Empty;
+            decimal totalPercent = 0m;
+            List<string> checkedColors = new List<string>();
+            if (wCheckBox.Checked)
+            {
+                checkedColors.Add("W");
+            }
+            if (uCheckBox.Checked)
+            {
+                checkedColors.Add("U");
+            }
+            if (bCheckBox.Checked)
+            {
+                checkedColors.Add("B");
+            }
+            if (rCheckBox.Checked)
+            {
+                checkedColors.Add("R");
+            }
+            if (gCheckBox.Checked)
+            {
+                checkedColors.Add("G");
+            }
+
+            List<string> selectedCards = new List<string>();
+            foreach (Card card in cards)
+            {
+                if (card.color_identity.Any(x => checkedColors.Contains(x)))
+                {
+                    selectedCards.Add(card.name);
+                    totalPercent += card.percent;
+                }
+            }
+
+            sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+            foreach (string str in selectedCards)
+            {
+                sortTextBox.Text += str + "\r\n";
             }
         }
     }
 
+    //Card objects - source of all data for individual cards
     class Card
     {
         public int amount { get; set; }
@@ -244,6 +416,7 @@ namespace WinForms_Test
         public CardFace[] card_faces { get; set; }
         public ImageURI image_uris { get; set; }
     }
+    //Links to different size images for a card
     class ImageURI
     {
         public string small { get; set; }
@@ -251,6 +424,7 @@ namespace WinForms_Test
         public string large { get; set; }
         public string png { get; set; }
     }
+    //Only for multiface cards
     class CardFace
     {
         public string name { get; set; }

@@ -270,9 +270,14 @@ namespace WinForms_Test
                 case "Keywords":
                     sortListBox.Visible = false;
                     keywordTextBox.Visible = true;
+                    keywordTextBox.Tag = "Normal";
+                    keywordTextBox.Multiline = true;
                     break;
                 case "Custom Keywords":
-                    //TODO: Implement this
+                    sortListBox.Visible = false;
+                    keywordTextBox.Visible = true;
+                    keywordTextBox.Tag = "Custom";
+                    keywordTextBox.Multiline = false;
                     break;
                 case "Rarity":
                     string[] rarities = { "common", "uncommon", "rare", "mythic" };
@@ -287,6 +292,7 @@ namespace WinForms_Test
                     bCheckBox.Visible = true;
                     rCheckBox.Visible = true;
                     gCheckBox.Visible = true;
+                    sortListBox.Visible = false;
                     break;
             }
         }
@@ -294,26 +300,64 @@ namespace WinForms_Test
         {
             sortTextBox.Text = string.Empty;
             decimal totalPercent = 0m;
-            string[] keywordsInput = keywordTextBox.Lines;
-            string[] keywords = new string[keywordsInput.Length];
-            for (int i = 0; i < keywords.Length; i++)
+            if ((string)keywordTextBox.Tag == "Normal")
             {
-                keywords[i] = UppercaseFirst(keywordsInput[i].ToLower());
-            }
-            List<string> selectedCards = new List<string>();
-            foreach (Card card in cards)
-            {
-                if (card.keywords.Any(x => keywords.Contains(x)))
+                string[] keywordsInput = keywordTextBox.Lines;
+                string[] keywords = new string[keywordsInput.Length];
+                for (int i = 0; i < keywords.Length; i++)
                 {
-                    selectedCards.Add(card.name);
-                    totalPercent += card.percent;
+                    keywords[i] = UppercaseFirst(keywordsInput[i].ToLower());
+                }
+                List<string> selectedCards = new List<string>();
+                foreach (Card card in cards)
+                {
+                    if (card.keywords.Any(x => keywords.Contains(x)))
+                    {
+                        selectedCards.Add(card.name);
+                        totalPercent += card.percent;
+                    }
+                }
+
+                sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+                foreach (string str in selectedCards)
+                {
+                    sortTextBox.Text += str + "\r\n";
                 }
             }
-
-            sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
-            foreach (string str in selectedCards)
+            //TODO: This portion still adds the percentages of each keyword, instead of further filtering them
+            else if ((string)keywordTextBox.Tag == "Custom")
             {
-                sortTextBox.Text += str + "\r\n";
+                sortTextBox.Text = string.Empty;
+                string[] searchInput = keywordTextBox.Text.Split(' ');
+                string[] search = new string[searchInput.Length];
+                for (int i = 0; i < search.Length; i++)
+                {
+                    search[i] = searchInput[i].ToLower();
+                }
+                List<string> selectedCards = new List<string>();
+                foreach (Card card in cards)
+                {
+                    string[] oracleWords = card.oracle_text?.Split(' ');
+                    if (oracleWords == null)
+                    {
+                        continue;
+                    }
+                    for (int i = 0; i < oracleWords.Length; i++)
+                    {
+                        oracleWords[i] = oracleWords[i].ToLower();
+                    }
+                    if (oracleWords.Any(x => search.Contains(x)))
+                    {
+                        selectedCards.Add(card.name);
+                        totalPercent += card.percent;
+                    }
+                }
+
+                sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+                foreach (string str in selectedCards)
+                {
+                    sortTextBox.Text += str + "\r\n";
+                }
             }
         }
 
@@ -354,7 +398,7 @@ namespace WinForms_Test
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
-        private void UpdateCheckBoxes(object sender, EventArgs e)
+        private void UpdateCheckBoxes()
         {
             sortTextBox.Text = string.Empty;
             decimal totalPercent = 0m;
@@ -379,22 +423,59 @@ namespace WinForms_Test
             {
                 checkedColors.Add("G");
             }
-
+            checkedColors.Sort();
             List<string> selectedCards = new List<string>();
             foreach (Card card in cards)
             {
-                if (card.color_identity.Any(x => checkedColors.Contains(x)))
+                List<string> both = card.color_identity.Intersect(checkedColors).ToList();
+                both.Sort();
+                if (checkedColors.Count == both.Count)
                 {
-                    selectedCards.Add(card.name);
-                    totalPercent += card.percent;
+                    if (both.SequenceEqual(checkedColors))
+                    {
+                        selectedCards.Add(card.name);
+                        totalPercent += card.percent;
+                    }
                 }
             }
-
-            sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
-            foreach (string str in selectedCards)
+            if (!wCheckBox.Checked && !uCheckBox.Checked && !bCheckBox.Checked && !rCheckBox.Checked && !gCheckBox.Checked)
             {
-                sortTextBox.Text += str + "\r\n";
+                sortTextBox.Text = "0% chance of drawing\r\n";
             }
+            else
+            {
+                sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+                foreach (string str in selectedCards)
+                {
+                    sortTextBox.Text += str + "\r\n";
+                }
+            }
+        }
+
+        //These five are just to run UpdateCheckBoxes()
+        private void wCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCheckBoxes();
+        }
+
+        private void uCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCheckBoxes();
+        }
+
+        private void bCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCheckBoxes();
+        }
+
+        private void rCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCheckBoxes();
+        }
+
+        private void gCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateCheckBoxes();
         }
     }
 

@@ -1066,6 +1066,7 @@
             this.wCheckBox.Text = "White";
             this.wCheckBox.UseVisualStyleBackColor = true;
             this.wCheckBox.Visible = false;
+            this.wCheckBox.CheckedChanged += new System.EventHandler(this.wCheckBox_CheckedChanged);
             // 
             // uCheckBox
             // 
@@ -1078,6 +1079,7 @@
             this.uCheckBox.Text = "Blue";
             this.uCheckBox.UseVisualStyleBackColor = true;
             this.uCheckBox.Visible = false;
+            this.uCheckBox.CheckedChanged += new System.EventHandler(this.uCheckBox_CheckedChanged);
             // 
             // bCheckBox
             // 
@@ -1090,6 +1092,7 @@
             this.bCheckBox.Text = "Black";
             this.bCheckBox.UseVisualStyleBackColor = true;
             this.bCheckBox.Visible = false;
+            this.bCheckBox.CheckedChanged += new System.EventHandler(this.bCheckBox_CheckedChanged);
             // 
             // rCheckBox
             // 
@@ -1102,6 +1105,7 @@
             this.rCheckBox.Text = "Red";
             this.rCheckBox.UseVisualStyleBackColor = true;
             this.rCheckBox.Visible = false;
+            this.rCheckBox.CheckedChanged += new System.EventHandler(this.rCheckBox_CheckedChanged);
             // 
             // gCheckBox
             // 
@@ -1114,6 +1118,7 @@
             this.gCheckBox.Text = "Green";
             this.gCheckBox.UseVisualStyleBackColor = true;
             this.gCheckBox.Visible = false;
+            this.gCheckBox.CheckedChanged += new System.EventHandler(this.gCheckBox_CheckedChanged);
             // 
             // lblFilter
             // 

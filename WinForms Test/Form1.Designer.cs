@@ -100,7 +100,6 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.sortListBox = new System.Windows.Forms.ComboBox();
-            this.debugTextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.sortTextBox = new System.Windows.Forms.TextBox();
             this.sortTypeListBox = new System.Windows.Forms.ComboBox();
@@ -113,6 +112,8 @@
             this.rCheckBox = new System.Windows.Forms.CheckBox();
             this.gCheckBox = new System.Windows.Forms.CheckBox();
             this.lblFilter = new System.Windows.Forms.Label();
+            this.lblUpdateValues = new System.Windows.Forms.Label();
+            this.progBarLoadDeck = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.cardImagesGroupBox.SuspendLayout();
@@ -211,6 +212,7 @@
             this.pictureBox1.TabIndex = 7;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Tag = "0";
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox2
             // 
@@ -221,6 +223,7 @@
             this.pictureBox2.TabIndex = 8;
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Tag = "1";
+            this.pictureBox2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // cardImagesGroupBox
             // 
@@ -657,6 +660,7 @@
             this.pictureBox17.TabIndex = 38;
             this.pictureBox17.TabStop = false;
             this.pictureBox17.Tag = "16";
+            this.pictureBox17.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox18
             // 
@@ -667,6 +671,7 @@
             this.pictureBox18.TabIndex = 37;
             this.pictureBox18.TabStop = false;
             this.pictureBox18.Tag = "17";
+            this.pictureBox18.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox19
             // 
@@ -677,6 +682,7 @@
             this.pictureBox19.TabIndex = 36;
             this.pictureBox19.TabStop = false;
             this.pictureBox19.Tag = "18";
+            this.pictureBox19.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox20
             // 
@@ -687,6 +693,7 @@
             this.pictureBox20.TabIndex = 35;
             this.pictureBox20.TabStop = false;
             this.pictureBox20.Tag = "19";
+            this.pictureBox20.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox21
             // 
@@ -697,6 +704,7 @@
             this.pictureBox21.TabIndex = 34;
             this.pictureBox21.TabStop = false;
             this.pictureBox21.Tag = "20";
+            this.pictureBox21.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox22
             // 
@@ -707,6 +715,7 @@
             this.pictureBox22.TabIndex = 33;
             this.pictureBox22.TabStop = false;
             this.pictureBox22.Tag = "21";
+            this.pictureBox22.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox23
             // 
@@ -717,6 +726,7 @@
             this.pictureBox23.TabIndex = 32;
             this.pictureBox23.TabStop = false;
             this.pictureBox23.Tag = "22";
+            this.pictureBox23.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox24
             // 
@@ -727,6 +737,7 @@
             this.pictureBox24.TabIndex = 31;
             this.pictureBox24.TabStop = false;
             this.pictureBox24.Tag = "23";
+            this.pictureBox24.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox25
             // 
@@ -737,6 +748,7 @@
             this.pictureBox25.TabIndex = 30;
             this.pictureBox25.TabStop = false;
             this.pictureBox25.Tag = "24";
+            this.pictureBox25.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox26
             // 
@@ -747,6 +759,7 @@
             this.pictureBox26.TabIndex = 29;
             this.pictureBox26.TabStop = false;
             this.pictureBox26.Tag = "25";
+            this.pictureBox26.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox27
             // 
@@ -757,6 +770,7 @@
             this.pictureBox27.TabIndex = 28;
             this.pictureBox27.TabStop = false;
             this.pictureBox27.Tag = "26";
+            this.pictureBox27.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox28
             // 
@@ -767,6 +781,7 @@
             this.pictureBox28.TabIndex = 27;
             this.pictureBox28.TabStop = false;
             this.pictureBox28.Tag = "27";
+            this.pictureBox28.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox29
             // 
@@ -777,6 +792,7 @@
             this.pictureBox29.TabIndex = 26;
             this.pictureBox29.TabStop = false;
             this.pictureBox29.Tag = "28";
+            this.pictureBox29.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox30
             // 
@@ -787,6 +803,7 @@
             this.pictureBox30.TabIndex = 25;
             this.pictureBox30.TabStop = false;
             this.pictureBox30.Tag = "29";
+            this.pictureBox30.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox31
             // 
@@ -797,6 +814,7 @@
             this.pictureBox31.TabIndex = 23;
             this.pictureBox31.TabStop = false;
             this.pictureBox31.Tag = "30";
+            this.pictureBox31.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox32
             // 
@@ -807,6 +825,7 @@
             this.pictureBox32.TabIndex = 24;
             this.pictureBox32.TabStop = false;
             this.pictureBox32.Tag = "31";
+            this.pictureBox32.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox16
             // 
@@ -817,6 +836,7 @@
             this.pictureBox16.TabIndex = 22;
             this.pictureBox16.TabStop = false;
             this.pictureBox16.Tag = "15";
+            this.pictureBox16.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox15
             // 
@@ -827,6 +847,7 @@
             this.pictureBox15.TabIndex = 21;
             this.pictureBox15.TabStop = false;
             this.pictureBox15.Tag = "14";
+            this.pictureBox15.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox14
             // 
@@ -837,6 +858,7 @@
             this.pictureBox14.TabIndex = 20;
             this.pictureBox14.TabStop = false;
             this.pictureBox14.Tag = "13";
+            this.pictureBox14.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox13
             // 
@@ -847,6 +869,7 @@
             this.pictureBox13.TabIndex = 19;
             this.pictureBox13.TabStop = false;
             this.pictureBox13.Tag = "12";
+            this.pictureBox13.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox12
             // 
@@ -857,6 +880,7 @@
             this.pictureBox12.TabIndex = 18;
             this.pictureBox12.TabStop = false;
             this.pictureBox12.Tag = "11";
+            this.pictureBox12.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox11
             // 
@@ -867,6 +891,7 @@
             this.pictureBox11.TabIndex = 17;
             this.pictureBox11.TabStop = false;
             this.pictureBox11.Tag = "10";
+            this.pictureBox11.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox10
             // 
@@ -877,6 +902,7 @@
             this.pictureBox10.TabIndex = 16;
             this.pictureBox10.TabStop = false;
             this.pictureBox10.Tag = "9";
+            this.pictureBox10.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox9
             // 
@@ -887,6 +913,7 @@
             this.pictureBox9.TabIndex = 15;
             this.pictureBox9.TabStop = false;
             this.pictureBox9.Tag = "8";
+            this.pictureBox9.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox8
             // 
@@ -897,6 +924,7 @@
             this.pictureBox8.TabIndex = 14;
             this.pictureBox8.TabStop = false;
             this.pictureBox8.Tag = "7";
+            this.pictureBox8.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox7
             // 
@@ -907,6 +935,7 @@
             this.pictureBox7.TabIndex = 13;
             this.pictureBox7.TabStop = false;
             this.pictureBox7.Tag = "6";
+            this.pictureBox7.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox6
             // 
@@ -917,6 +946,7 @@
             this.pictureBox6.TabIndex = 12;
             this.pictureBox6.TabStop = false;
             this.pictureBox6.Tag = "5";
+            this.pictureBox6.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox5
             // 
@@ -927,6 +957,7 @@
             this.pictureBox5.TabIndex = 11;
             this.pictureBox5.TabStop = false;
             this.pictureBox5.Tag = "4";
+            this.pictureBox5.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox4
             // 
@@ -937,6 +968,7 @@
             this.pictureBox4.TabIndex = 10;
             this.pictureBox4.TabStop = false;
             this.pictureBox4.Tag = "3";
+            this.pictureBox4.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // pictureBox3
             // 
@@ -947,6 +979,7 @@
             this.pictureBox3.TabIndex = 9;
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Tag = "2";
+            this.pictureBox3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OnPictureBoxClick);
             // 
             // sortListBox
             // 
@@ -966,16 +999,6 @@
             this.sortListBox.TabIndex = 10;
             this.sortListBox.Visible = false;
             this.sortListBox.SelectedIndexChanged += new System.EventHandler(this.sortListBox_SelectedIndexChanged);
-            // 
-            // debugTextBox
-            // 
-            this.debugTextBox.AcceptsReturn = true;
-            this.debugTextBox.Location = new System.Drawing.Point(173, 711);
-            this.debugTextBox.Multiline = true;
-            this.debugTextBox.Name = "debugTextBox";
-            this.debugTextBox.Size = new System.Drawing.Size(299, 46);
-            this.debugTextBox.TabIndex = 11;
-            this.debugTextBox.TextChanged += new System.EventHandler(this.debugTextBox_TextChanged);
             // 
             // tableLayoutPanel1
             // 
@@ -1066,7 +1089,7 @@
             this.wCheckBox.Text = "White";
             this.wCheckBox.UseVisualStyleBackColor = true;
             this.wCheckBox.Visible = false;
-            this.wCheckBox.CheckedChanged += new System.EventHandler(this.wCheckBox_CheckedChanged);
+            this.wCheckBox.CheckedChanged += new System.EventHandler(this.UpdateCheckBoxes);
             // 
             // uCheckBox
             // 
@@ -1079,7 +1102,7 @@
             this.uCheckBox.Text = "Blue";
             this.uCheckBox.UseVisualStyleBackColor = true;
             this.uCheckBox.Visible = false;
-            this.uCheckBox.CheckedChanged += new System.EventHandler(this.uCheckBox_CheckedChanged);
+            this.uCheckBox.CheckedChanged += new System.EventHandler(this.UpdateCheckBoxes);
             // 
             // bCheckBox
             // 
@@ -1092,7 +1115,7 @@
             this.bCheckBox.Text = "Black";
             this.bCheckBox.UseVisualStyleBackColor = true;
             this.bCheckBox.Visible = false;
-            this.bCheckBox.CheckedChanged += new System.EventHandler(this.bCheckBox_CheckedChanged);
+            this.bCheckBox.CheckedChanged += new System.EventHandler(this.UpdateCheckBoxes);
             // 
             // rCheckBox
             // 
@@ -1105,7 +1128,7 @@
             this.rCheckBox.Text = "Red";
             this.rCheckBox.UseVisualStyleBackColor = true;
             this.rCheckBox.Visible = false;
-            this.rCheckBox.CheckedChanged += new System.EventHandler(this.rCheckBox_CheckedChanged);
+            this.rCheckBox.CheckedChanged += new System.EventHandler(this.UpdateCheckBoxes);
             // 
             // gCheckBox
             // 
@@ -1118,7 +1141,7 @@
             this.gCheckBox.Text = "Green";
             this.gCheckBox.UseVisualStyleBackColor = true;
             this.gCheckBox.Visible = false;
-            this.gCheckBox.CheckedChanged += new System.EventHandler(this.gCheckBox_CheckedChanged);
+            this.gCheckBox.CheckedChanged += new System.EventHandler(this.UpdateCheckBoxes);
             // 
             // lblFilter
             // 
@@ -1130,11 +1153,32 @@
             this.lblFilter.Text = "Choose a filter";
             this.lblFilter.Visible = false;
             // 
+            // lblUpdateValues
+            // 
+            this.lblUpdateValues.AutoSize = true;
+            this.lblUpdateValues.Location = new System.Drawing.Point(364, 178);
+            this.lblUpdateValues.Name = "lblUpdateValues";
+            this.lblUpdateValues.Size = new System.Drawing.Size(108, 13);
+            this.lblUpdateValues.TabIndex = 24;
+            this.lblUpdateValues.Text = "Values not up to date";
+            this.lblUpdateValues.Visible = false;
+            // 
+            // progBarLoadDeck
+            // 
+            this.progBarLoadDeck.Location = new System.Drawing.Point(120, 925);
+            this.progBarLoadDeck.Name = "progBarLoadDeck";
+            this.progBarLoadDeck.Size = new System.Drawing.Size(157, 23);
+            this.progBarLoadDeck.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progBarLoadDeck.TabIndex = 25;
+            this.progBarLoadDeck.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1508, 954);
+            this.Controls.Add(this.progBarLoadDeck);
+            this.Controls.Add(this.lblUpdateValues);
             this.Controls.Add(this.lblFilter);
             this.Controls.Add(this.gCheckBox);
             this.Controls.Add(this.rCheckBox);
@@ -1147,7 +1191,6 @@
             this.Controls.Add(this.sortTypeListBox);
             this.Controls.Add(this.sortTextBox);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.debugTextBox);
             this.Controls.Add(this.sortListBox);
             this.Controls.Add(this.cardImagesGroupBox);
             this.Controls.Add(this.lblStatus);
@@ -1267,7 +1310,6 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TextBox debugTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox sortTextBox;
         private System.Windows.Forms.ComboBox sortTypeListBox;
@@ -1280,6 +1322,8 @@
         private System.Windows.Forms.CheckBox rCheckBox;
         private System.Windows.Forms.CheckBox gCheckBox;
         private System.Windows.Forms.Label lblFilter;
+        private System.Windows.Forms.Label lblUpdateValues;
+        private System.Windows.Forms.ProgressBar progBarLoadDeck;
     }
 }
 

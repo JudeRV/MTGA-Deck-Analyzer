@@ -100,7 +100,7 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.sortListBox = new System.Windows.Forms.ComboBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.filePanel = new System.Windows.Forms.TableLayoutPanel();
             this.sortTextBox = new System.Windows.Forms.TextBox();
             this.sortTypeListBox = new System.Windows.Forms.ComboBox();
             this.lblLoadDeck = new System.Windows.Forms.Label();
@@ -147,7 +147,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.filePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // testDialog
@@ -1000,24 +1000,24 @@
             this.sortListBox.Visible = false;
             this.sortListBox.SelectedIndexChanged += new System.EventHandler(this.sortListBox_SelectedIndexChanged);
             // 
-            // tableLayoutPanel1
+            // filePanel
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.filePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.35366F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.64634F));
-            this.tableLayoutPanel1.Controls.Add(this.btnLoadDeck, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.btnOpenFile, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.fileTextBox, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(15, 21);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 71F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(434, 112);
-            this.tableLayoutPanel1.TabIndex = 12;
+            this.filePanel.ColumnCount = 2;
+            this.filePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 28.35366F));
+            this.filePanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 71.64634F));
+            this.filePanel.Controls.Add(this.btnLoadDeck, 0, 1);
+            this.filePanel.Controls.Add(this.btnOpenFile, 0, 0);
+            this.filePanel.Controls.Add(this.fileTextBox, 1, 0);
+            this.filePanel.Location = new System.Drawing.Point(15, 21);
+            this.filePanel.Name = "filePanel";
+            this.filePanel.RowCount = 2;
+            this.filePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29F));
+            this.filePanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 71F));
+            this.filePanel.Size = new System.Drawing.Size(434, 112);
+            this.filePanel.TabIndex = 12;
             // 
             // sortTextBox
             // 
@@ -1190,7 +1190,7 @@
             this.Controls.Add(this.lblLoadDeck);
             this.Controls.Add(this.sortTypeListBox);
             this.Controls.Add(this.sortTextBox);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.filePanel);
             this.Controls.Add(this.sortListBox);
             this.Controls.Add(this.cardImagesGroupBox);
             this.Controls.Add(this.lblStatus);
@@ -1231,8 +1231,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.filePanel.ResumeLayout(false);
+            this.filePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1310,7 +1310,7 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel filePanel;
         private System.Windows.Forms.TextBox sortTextBox;
         private System.Windows.Forms.ComboBox sortTypeListBox;
         private System.Windows.Forms.Label lblLoadDeck;

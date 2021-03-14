@@ -133,7 +133,7 @@ namespace WinForms_Test
         {
             lblUpdateValues.Visible = false;
             IEnumerable<Card> query = Enumerable.Empty<Card>();
-            decimal totalPercent = 0m;
+            float totalPercent = 0f;
             sortTextBox.Text = string.Empty;
             switch (sortListBox.Tag)
             {
@@ -158,7 +158,7 @@ namespace WinForms_Test
             sortTextBox.Text += totalPercent + "% chance of drawing\r\n";
             foreach (Card card in query)
             {
-                sortTextBox.Text += card.name + "\r\n";
+                sortTextBox.Text += card.name + Environment.NewLine;
             }
         }
 
@@ -222,7 +222,7 @@ namespace WinForms_Test
         {
             lblUpdateValues.Visible = false;
             sortTextBox.Text = string.Empty;
-            decimal totalPercent = 0m;
+            float totalPercent = 0f;
             if ((string)keywordTextBox.Tag == "Normal")
             {
                 string[] keywordsInput = keywordTextBox.Lines;
@@ -244,10 +244,10 @@ namespace WinForms_Test
                     }
                 }
 
-                sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
+                sortTextBox.Text += totalPercent + " % chance of drawing" + Environment.NewLine;
                 foreach (string str in selectedCards)
                 {
-                    sortTextBox.Text += str + "\r\n";
+                    sortTextBox.Text += str + Environment.NewLine;
                 }
             }
             //TODO: This portion still adds the percentages of each keyword, instead of further filtering them
@@ -286,7 +286,7 @@ namespace WinForms_Test
                 sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
                 foreach (string str in selectedCards)
                 {
-                    sortTextBox.Text += str + "\r\n";
+                    sortTextBox.Text += str + Environment.NewLine;
                 }
             }
         }
@@ -323,7 +323,7 @@ namespace WinForms_Test
         {
             lblUpdateValues.Visible = false;
             sortTextBox.Text = string.Empty;
-            decimal totalPercent = 0m;
+            float totalPercent = 0f;
             List<string> checkedColors = new List<string>();
             if (wCheckBox.Checked)
             {
@@ -372,7 +372,7 @@ namespace WinForms_Test
                 sortTextBox.Text += totalPercent + "% chance of drawing\r\n";
                 foreach (string str in selectedCards)
                 {
-                    sortTextBox.Text += str + "\r\n";
+                    sortTextBox.Text += str + Environment.NewLine;
                 }
             }
         }
@@ -388,9 +388,7 @@ namespace WinForms_Test
                 if (cards[index].amount > 0)
                 {
                     cards[index].amount--;
-                    UpdateCardPercent(index);
-                    UpdateCardLabels();
-                    NotifyUpdateValues();
+                    libraryCount--;
                 }
             }
             else if (e.Button == MouseButtons.Right)
@@ -398,15 +396,17 @@ namespace WinForms_Test
                 if (cards[index].amount < cards[index].maxAmount)
                 {
                     cards[index].amount++;
-                    UpdateCardPercent(index);
-                    UpdateCardLabels();
-                    NotifyUpdateValues();
+                    libraryCount++;
                 }
             }
             else
             {
                 return;
             }
+            UpdateCardPercents();
+            UpdateCardLabels();
+            NotifyUpdateValues();
+            UpdateSortValues();
         }
 
         //
@@ -419,17 +419,29 @@ namespace WinForms_Test
         //Just don't even try to understand how this works. I don't even know anymore.
         private async Task<Card[]> GetCardsAsync()
         {
-
+            int startLinesIndex = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains("Deck") || lines[i].Contains("deck"))
+                {
+                    startLinesIndex = i + 1;
+                    break;
+                }
+            }
             //Creates new array of only lines of cards from file
             int newLinesLength = 0;
-            for (int i = 1; lines[i].Length > 0 && lines[i + 1] != null; i++)
+            for (int i = startLinesIndex; i < lines.Length; i++)
             {
+                if (lines[i] == "")
+                {
+                    break;
+                }
                 newLinesLength++;
             }
             string[] newLines = new string[newLinesLength];
-            for (int i = 0; i < newLines.Length; i++)
+            for (int i = startLinesIndex; i < newLinesLength + startLinesIndex; i++)
             {
-                newLines[i] = lines[i + 1];
+                newLines[i - startLinesIndex] = lines[i];
             }
             Card[] cardList = new Card[newLines.Length];
             for (int i = 0; i < cardList.Length; i++)
@@ -450,11 +462,19 @@ namespace WinForms_Test
                     startIndex++;
                 }
                 int endIndex = startIndex;
-                for (int j = startIndex; newLines[i][j] != '('; j++)
+                for (int j = startIndex; j < newLines[i].Length; j++)
                 {
+                    if (newLines[i][j].Equals('('))
+                    {
+                        endIndex -= 2;
+                        break;
+                    }
                     endIndex++;
                 }
-                endIndex -= 2;
+                while (endIndex >= newLines[i].Length)
+                {
+                    endIndex--;
+                }
 
                 //Getting names of cards
                 string cardName = "";
@@ -468,7 +488,7 @@ namespace WinForms_Test
                 cardList[i] = JsonConvert.DeserializeObject<Card>(json);
                 cardList[i].amount = cardAmount;
                 cardList[i].maxAmount = cardAmount;
-                cardList[i].percent = Math.Round((decimal)(cardList[i].amount / (decimal)libraryCount * 100m), 2);
+                cardList[i].percent = (float)Math.Round(((float)cardList[i].amount / (float)libraryCount * 100f), 2);
                 progBarLoadDeck.Value = (100 / cardList.Length) * i;
                 Thread.Sleep(100);
             }
@@ -495,6 +515,13 @@ namespace WinForms_Test
                 catch (IndexOutOfRangeException)
                 {
                     continue;
+                }
+            }
+            foreach (PictureBox pictureBox in cardImagesGroupBox.Controls.OfType<PictureBox>())
+            {
+                if (pictureBox.Image == null)
+                {
+                    pictureBox.Enabled = false;
                 }
             }
             foreach (Label label in cardImagesGroupBox.Controls.OfType<Label>())
@@ -559,6 +586,47 @@ namespace WinForms_Test
             }
             return false;
         }
+        //Updates card values in sortTextBox
+        private void UpdateSortValues()
+        {
+            float totalPercent = 0f;
+            if (sortTextBox.Text == string.Empty)
+            {
+                return;
+            }
+            else
+            {
+                List<Card> cardObjects = new List<Card>();
+                string[] cardNamesFull = sortTextBox.Lines;
+                string[] cardNames = new string[cardNamesFull.Length - 1];
+                for (int i = 0; i < cardNames.Length; i++)
+                {
+                    cardNames[i] = cardNamesFull[i + 1];
+                }
+                foreach (string str in cardNames)
+                {
+                    foreach (Card card in cards)
+                    {
+                        if (card.name.Equals(str))
+                        {
+                            cardObjects.Add(card);
+                            break;
+                        }
+                    }
+                }
+                sortTextBox.Text = string.Empty;
+                foreach (Card card in cardObjects)
+                {
+                    totalPercent += card.percent;
+                }
+                totalPercent = (float)Math.Round(totalPercent, 2);
+                sortTextBox.Text += totalPercent + "% chance of drawing" + Environment.NewLine;
+                foreach (Card card in cardObjects)
+                {
+                    sortTextBox.Text += card.name + Environment.NewLine;
+                }
+            }
+        }
         //Literally just makes first letter of a string capital
         private string UppercaseFirst(string s)
         {
@@ -569,9 +637,12 @@ namespace WinForms_Test
             return char.ToUpper(s[0]) + s.Substring(1);
         }
         //Just updates the card percent since it's based off of the amount property
-        private void UpdateCardPercent(int i)
+        private void UpdateCardPercents()
         {
-            cards[i].percent = Math.Round((decimal)(cards[i].amount / (decimal)libraryCount * 100m), 2);
+            foreach (Card card in cards)
+            {
+                card.percent = (float)Math.Round(((float)card.amount / (float)libraryCount * 100f), 2);
+            }
         }
         //Notifies user that values are out of date if any cards have been drawn/undrawn
         private void NotifyUpdateValues()
@@ -592,7 +663,7 @@ namespace WinForms_Test
         public int amount { get; set; }
         public int maxAmount { get; set; }
         public decimal cmc { get; set; }
-        public decimal percent { get; set; }
+        public float percent { get; set; }
         public string[] color_identity { get; set; }
         public string[] keywords { get; set; }
         public string name { get; set; }
@@ -620,4 +691,5 @@ namespace WinForms_Test
         public string mana_cost { get; set; }
         public ImageURI image_uris { get; set; }
     }
+
 }

@@ -19,12 +19,11 @@ namespace WinForms_Test
         static readonly HttpClient client = new HttpClient();
         Card[] cards = { };
         string[] lines = { };
-        string[] cardKeywords = { };
         int libraryCount = 60;
         public Form1()
         {
             InitializeComponent();
-            this.MaximizeBox = false;
+            MaximizeBox = false;
         }
 
         //Just opens up file window to select deck file
@@ -32,16 +31,78 @@ namespace WinForms_Test
         {
             testDialog.ShowDialog();
         }
-
         //Gets file-path for deck loading
         private void testDialog_FileOk(object sender, CancelEventArgs e)
         {
             fileTextBox.Text = testDialog.FileName;
         }
+        //DragDrop & DragEnter just let you drop a file into fileTextBox
+        private void fileTextBox_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+        private void fileTextBox_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            foreach (string str in fileList)
+            {
+                fileTextBox.Text = str;
+            }
+        }
+        //Enter, Leave, and TextChanged are all just for textbox aesthetics
+        private void fileTextBox_Enter(object sender, EventArgs e)
+        {
+            if (fileTextBox.Text == "File path goes here . . .")
+            {
+                fileTextBox.Text = string.Empty;
+                fileTextBox.ForeColor = Color.Black;
+            }
+        }
+        private void fileTextBox_Leave(object sender, EventArgs e)
+        {
+            if (fileTextBox.Text == string.Empty)
+            {
+                fileTextBox.ForeColor = Color.Gray;
+                fileTextBox.Text = "File path goes here . . .";
+            }
+        }
+        private void fileTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (fileTextBox.Text == "File path goes here . . .")
+            {
+                fileTextBox.ForeColor = Color.Gray;
+            }
+            else
+            {
+                fileTextBox.ForeColor = Color.Black;
+            }
+        }
 
         //Loads deck file from file-path
         private async void btnLoadDeck_Click(object sender, EventArgs e)
         {
+            sortListBox.Visible = false;
+            sortTextBox.Text = string.Empty;
+            sortTextBox.Visible = false;
+            keywordTextBox.Visible = false;
+            wCheckBox.Visible = false;
+            uCheckBox.Visible = false;
+            bCheckBox.Visible = false;
+            rCheckBox.Visible = false;
+            gCheckBox.Visible = false;
+            wCheckBox.Checked = false;
+            uCheckBox.Checked = false;
+            bCheckBox.Checked = false;
+            rCheckBox.Checked = false;
+            gCheckBox.Checked = false;
+            lblFilter.Visible = false;
             lblStatus.Visible = true;
             lblSort.Visible = false;
             btnOpenFile.Visible = false;
@@ -50,7 +111,7 @@ namespace WinForms_Test
             lblLoadDeck.Visible = false;
             sortTypeListBox.Visible = false;
             cardImagesGroupBox.Visible = false;
-            lblStatus.Text = "Just a moment . . .";
+            lblStatus.Visible = true;
             progBarLoadDeck.Value = 0;
             progBarLoadDeck.Visible = true;
             try
@@ -99,68 +160,6 @@ namespace WinForms_Test
             cardImagesGroupBox.Visible = true;
         }
 
-        //==========These three are literally just text box aesthetics==========
-        private void fileTextBox_Enter(object sender, EventArgs e)
-        {
-            if (fileTextBox.Text == "File path goes here . . .")
-            {
-                fileTextBox.Text = string.Empty;
-                fileTextBox.ForeColor = Color.Black;
-            }
-        }
-        private void fileTextBox_Leave(object sender, EventArgs e)
-        {
-            if (fileTextBox.Text == string.Empty)
-            {
-                fileTextBox.ForeColor = Color.Gray;
-                fileTextBox.Text = "File path goes here . . .";
-            }
-        }
-        private void fileTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (fileTextBox.Text == "File path goes here . . .")
-            {
-                fileTextBox.ForeColor = Color.Gray;
-            }
-            else
-            {
-                fileTextBox.ForeColor = Color.Black;
-            }
-        }
-
-        //Displays cards & percent chance of drawing any card type
-        private void sortListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            lblUpdateValues.Visible = false;
-            IEnumerable<Card> query = Enumerable.Empty<Card>();
-            float totalPercent = 0f;
-            sortTextBox.Text = string.Empty;
-            switch (sortListBox.Tag)
-            {
-                case "Card Type":
-                    query = 
-                        from card in cards
-                        where card.type_line.Contains($"{sortListBox.Text}") && card.amount > 0
-                        select card;
-                    break;
-                case "Rarity":
-                    query =
-                        from card in cards
-                        where card.rarity.Equals($"{sortListBox.Text}") && card.amount > 0
-                        select card;
-                    break;
-            }
-
-            foreach (Card card in query)
-            {
-                totalPercent += card.percent;
-            }
-            sortTextBox.Text += totalPercent + "% chance of drawing\r\n";
-            foreach (Card card in query)
-            {
-                sortTextBox.Text += card.name + Environment.NewLine;
-            }
-        }
 
         //Tells sortListBox what to do basically
         private void sortTypeListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -190,13 +189,11 @@ namespace WinForms_Test
                 case "Keywords":
                     sortListBox.Visible = false;
                     keywordTextBox.Visible = true;
-                    keywordTextBox.Tag = "Normal";
                     keywordTextBox.Multiline = true;
                     break;
                 case "Custom Keywords":
                     sortListBox.Visible = false;
                     keywordTextBox.Visible = true;
-                    keywordTextBox.Tag = "Custom";
                     keywordTextBox.Multiline = false;
                     break;
                 case "Rarity":
@@ -216,11 +213,43 @@ namespace WinForms_Test
                     break;
             }
         }
+        //Displays cards & percent chance of drawing any card type
+        private void sortListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            IEnumerable<Card> query = Enumerable.Empty<Card>();
+            float totalPercent = 0f;
+            sortTextBox.Text = string.Empty;
+            switch (sortListBox.Tag)
+            {
+                case "Card Type":
+                    query = 
+                        from card in cards
+                        where card.type_line.Contains($"{sortListBox.Text}") && card.amount > 0
+                        select card;
+                    break;
+                case "Rarity":
+                    query =
+                        from card in cards
+                        where card.rarity.Equals($"{sortListBox.Text}") && card.amount > 0
+                        select card;
+                    break;
+            }
+
+            foreach (Card card in query)
+            {
+                totalPercent += card.percent;
+            }
+            totalPercent = (float)Math.Round(totalPercent, 2);
+            sortTextBox.Text += totalPercent + "% chance of drawing" + Environment.NewLine + Environment.NewLine;
+            foreach (Card card in query)
+            {
+                sortTextBox.Text += card.name + Environment.NewLine;
+            }
+        }
 
         //Gets card names & percentage for offical game keywords
         private void keywordTextBox_TextChanged(object sender, EventArgs e)
         {
-            lblUpdateValues.Visible = false;
             sortTextBox.Text = string.Empty;
             float totalPercent = 0f;
             if ((string)keywordTextBox.Tag == "Normal")
@@ -244,7 +273,7 @@ namespace WinForms_Test
                     }
                 }
 
-                sortTextBox.Text += totalPercent + " % chance of drawing" + Environment.NewLine;
+                sortTextBox.Text += totalPercent + " % chance of drawing" + Environment.NewLine + Environment.NewLine;
                 foreach (string str in selectedCards)
                 {
                     sortTextBox.Text += str + Environment.NewLine;
@@ -282,7 +311,7 @@ namespace WinForms_Test
                     }
 
                 }
-
+                totalPercent = (float)Math.Round(totalPercent, 2);
                 sortTextBox.Text += totalPercent + " % chance of drawing\r\n";
                 foreach (string str in selectedCards)
                 {
@@ -291,37 +320,9 @@ namespace WinForms_Test
             }
         }
 
-        //For debug purposes, will remove for production
-        private void debugTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        //These two just let you drop a file into fileTextBox
-        private void fileTextBox_DragDrop(object sender, DragEventArgs e)
-        {
-            string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            foreach (string str in fileList)
-            {
-                fileTextBox.Text = str;
-            }
-        }
-        private void fileTextBox_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
-        }
-
         //These update the checkbox-ed cards everytime a checkbox is changed
         private void UpdateCheckBoxes(object sender, EventArgs e)
         {
-            lblUpdateValues.Visible = false;
             sortTextBox.Text = string.Empty;
             float totalPercent = 0f;
             List<string> checkedColors = new List<string>();
@@ -369,7 +370,8 @@ namespace WinForms_Test
             }
             else
             {
-                sortTextBox.Text += totalPercent + "% chance of drawing\r\n";
+                totalPercent = (float)Math.Round(totalPercent, 2);
+                sortTextBox.Text += totalPercent + "% chance of drawing" + Environment.NewLine + Environment.NewLine;
                 foreach (string str in selectedCards)
                 {
                     sortTextBox.Text += str + Environment.NewLine;
@@ -405,7 +407,6 @@ namespace WinForms_Test
             }
             UpdateCardPercents();
             UpdateCardLabels();
-            NotifyUpdateValues();
             UpdateSortValues();
         }
 
@@ -505,11 +506,11 @@ namespace WinForms_Test
                     int index = int.Parse(pictureBox.Tag.ToString());
                     if (cards[index].layout == "modal_dfc" || cards[index].layout == "transform" || cards[index].layout == "double_sided")
                     {
-                        await Task.Run(() => pictureBox.Load(cards[index].card_faces[0].image_uris.large));
+                        await Task.Run(() => pictureBox.Load(cards[index].card_faces[0].image_uris.normal));
                     }
                     else
                     {
-                        await Task.Run(() => pictureBox.Load(cards[index].image_uris.large));
+                        await Task.Run(() => pictureBox.Load(cards[index].image_uris.normal));
                     }
                 }
                 catch (IndexOutOfRangeException)
@@ -557,35 +558,6 @@ namespace WinForms_Test
                 }
             }
         }
-        //Checks if array is inside another array in its original order
-        private bool IsSubArray(string[] A, string[] B, int n, int m)
-        {
-            // Two pointers to traverse the arrays 
-            int i = 0, j = 0;
-            // Traverse both arrays simultaneously 
-            while (i < n && j < m)
-            {
-                // If element matches 
-                // increment both pointers 
-                if (A[i] == B[j])
-                {
-                    i++;
-                    j++;
-                    // If array B is completely 
-                    // traversed 
-                    if (j == m)
-                        return true;
-                }
-                // If not, 
-                // increment i and reset j 
-                else
-                {
-                    i = i - j + 1;
-                    j = 0;
-                }
-            }
-            return false;
-        }
         //Updates card values in sortTextBox
         private void UpdateSortValues()
         {
@@ -620,21 +592,12 @@ namespace WinForms_Test
                     totalPercent += card.percent;
                 }
                 totalPercent = (float)Math.Round(totalPercent, 2);
-                sortTextBox.Text += totalPercent + "% chance of drawing" + Environment.NewLine;
+                sortTextBox.Text += totalPercent + "% chance of drawing" + Environment.NewLine + Environment.NewLine;
                 foreach (Card card in cardObjects)
                 {
                     sortTextBox.Text += card.name + Environment.NewLine;
                 }
             }
-        }
-        //Literally just makes first letter of a string capital
-        private string UppercaseFirst(string s)
-        {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            return char.ToUpper(s[0]) + s.Substring(1);
         }
         //Just updates the card percent since it's based off of the amount property
         private void UpdateCardPercents()
@@ -644,16 +607,43 @@ namespace WinForms_Test
                 card.percent = (float)Math.Round(((float)card.amount / (float)libraryCount * 100f), 2);
             }
         }
-        //Notifies user that values are out of date if any cards have been drawn/undrawn
-        private void NotifyUpdateValues()
+        //Checks if array is inside another array in its original order
+        private bool IsSubArray(string[] A, string[] B, int n, int m)
         {
-            if (sortTextBox.Visible)
+            // Two pointers to traverse the arrays 
+            int i = 0, j = 0;
+            // Traverse both arrays simultaneously 
+            while (i < n && j < m)
             {
-                if (sortTextBox.Lines.Length > 1)
+                // If element matches 
+                // increment both pointers 
+                if (A[i] == B[j])
                 {
-                    lblUpdateValues.Visible = true;
+                    i++;
+                    j++;
+                    // If array B is completely 
+                    // traversed 
+                    if (j == m)
+                        return true;
+                }
+                // If not, 
+                // increment i and reset j 
+                else
+                {
+                    i = i - j + 1;
+                    j = 0;
                 }
             }
+            return false;
+        }
+        //Just makes first letter of a string capital
+        private string UppercaseFirst(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+            return char.ToUpper(s[0]) + s.Substring(1);
         }
     }
 

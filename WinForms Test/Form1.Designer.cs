@@ -112,7 +112,6 @@
             this.rCheckBox = new System.Windows.Forms.CheckBox();
             this.gCheckBox = new System.Windows.Forms.CheckBox();
             this.lblFilter = new System.Windows.Forms.Label();
-            this.lblUpdateValues = new System.Windows.Forms.Label();
             this.progBarLoadDeck = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -171,9 +170,9 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(12, 932);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(66, 13);
+            this.lblStatus.Size = new System.Drawing.Size(93, 13);
             this.lblStatus.TabIndex = 3;
-            this.lblStatus.Text = "Status Label";
+            this.lblStatus.Text = "Just a moment . . .";
             this.lblStatus.Visible = false;
             // 
             // btnLoadDeck
@@ -1075,6 +1074,7 @@
             this.keywordTextBox.Name = "keywordTextBox";
             this.keywordTextBox.Size = new System.Drawing.Size(149, 161);
             this.keywordTextBox.TabIndex = 17;
+            this.keywordTextBox.Text = "+";
             this.keywordTextBox.Visible = false;
             this.keywordTextBox.TextChanged += new System.EventHandler(this.keywordTextBox_TextChanged);
             // 
@@ -1153,16 +1153,6 @@
             this.lblFilter.Text = "Choose a filter";
             this.lblFilter.Visible = false;
             // 
-            // lblUpdateValues
-            // 
-            this.lblUpdateValues.AutoSize = true;
-            this.lblUpdateValues.Location = new System.Drawing.Point(364, 178);
-            this.lblUpdateValues.Name = "lblUpdateValues";
-            this.lblUpdateValues.Size = new System.Drawing.Size(108, 13);
-            this.lblUpdateValues.TabIndex = 24;
-            this.lblUpdateValues.Text = "Values not up to date";
-            this.lblUpdateValues.Visible = false;
-            // 
             // progBarLoadDeck
             // 
             this.progBarLoadDeck.Location = new System.Drawing.Point(120, 925);
@@ -1178,7 +1168,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1508, 954);
             this.Controls.Add(this.progBarLoadDeck);
-            this.Controls.Add(this.lblUpdateValues);
             this.Controls.Add(this.lblFilter);
             this.Controls.Add(this.gCheckBox);
             this.Controls.Add(this.rCheckBox);
@@ -1322,7 +1311,6 @@
         private System.Windows.Forms.CheckBox rCheckBox;
         private System.Windows.Forms.CheckBox gCheckBox;
         private System.Windows.Forms.Label lblFilter;
-        private System.Windows.Forms.Label lblUpdateValues;
         private System.Windows.Forms.ProgressBar progBarLoadDeck;
     }
 }
